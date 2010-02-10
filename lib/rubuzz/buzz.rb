@@ -10,7 +10,9 @@ module Rubuzz
   # The Buzz class represents a Google Buzz
   class Buzz
 
-    attr_reader :author, :author_url, :content, :id, :reply_count, :reply_url
+    attr_reader :author, :author_url, :content, :id, :reply_count, :reply_url,
+                :title, :updated_at, :url
+
 
     # Initializes a new Buzz object with the given XML data
     #
@@ -20,10 +22,11 @@ module Rubuzz
       @author_url  = data.elements['author/uri'].text
       @content     = data.elements['content'].text
       @id          = data.elements['id'].text
-
       @reply_count = data.elements['thr:total'].text.to_i
-      reply_data = REXML::XPath.first(data, 'link[@rel="replies"]')
-      @reply_url = reply_data.attributes['href']
+      @reply_url   = REXML::XPath.first(data, 'link[@rel="replies"]').attributes['href']
+      @title       = data.elements['title'].text
+      @updated_at  = Time.parse(data.elements['updated'].text)
+      @url         = REXML::XPath.first(data, 'link[@rel="alternate"]').attributes['href']
     end
 
   end
