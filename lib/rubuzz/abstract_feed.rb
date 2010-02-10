@@ -6,39 +6,31 @@
 require 'open-uri'
 require 'rexml/document'
 
-require 'rubuzz/buzz'
-
 module Rubuzz
 
-  # The Feed class represents a Google Buzz update feed
-  class Feed
+  # The AbstractFeed class is used by Feed and CommentFeed classes for general
+  # tasks
+  class AbstractFeed
 
-    attr_reader :id, :buzzes, :hub_url, :title, :updated_at, :user
+    attr_reader :id, :hub_url, :title, :updated_at, :url, :user
 
-    # Initializes a new Feed object representing a Google Buzz update feed for
-    # the given user
+    # Sets the user this feed belongs to
     #
     # +user+: The update feed is loaded for this user
     def initialize(user)
       @user = user
     end
 
-    # Fetches the data from the update feed
+    # Fetches general feed data for both, BuzzFeed and CommentFeed
     def fetch
-      feed_url  = "http://buzz.googleapis.com/feeds/#{@user}/public/posted"
-      feed_data = REXML::Document.new(open(feed_url, :proxy => true)).root
+      feed_data = REXML::Document.new(open(@url, :proxy => true)).root
 
       @hub_url    = REXML::XPath.first(feed_data, 'link[@rel="hub"]').attributes['href']
       @id         = feed_data.elements['id'].text
       @title      = feed_data.elements['title'].text
       @updated_at = Time.parse(feed_data.elements['updated'].text)
 
-      @buzzes = []
-      feed_data.elements.each('entry') do |entry_data|
-        @buzzes << Buzz.new(entry_data)
-      end
-
-      true
+      feed_data
     end
 
   end
