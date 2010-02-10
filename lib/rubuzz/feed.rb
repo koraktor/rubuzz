@@ -13,7 +13,7 @@ module Rubuzz
   # The Feed class represents a Google Buzz update feed
   class Feed
 
-    attr_reader :id, :buzzes, :title, :updated_at, :user
+    attr_reader :id, :buzzes, :hub_url, :title, :updated_at, :user
 
     # Initializes a new Feed object representing a Google Buzz update feed for
     # the given user
@@ -28,6 +28,7 @@ module Rubuzz
       feed_url  = "http://buzz.googleapis.com/feeds/#{@user}/public/posted"
       feed_data = REXML::Document.new(open(feed_url, :proxy => true)).root
 
+      @hub_url    = REXML::XPath.first(feed_data, 'link[@rel="hub"]').attributes['href']
       @id         = feed_data.elements['id'].text
       @title      = feed_data.elements['title'].text
       @updated_at = Time.parse(feed_data.elements['updated'].text)
