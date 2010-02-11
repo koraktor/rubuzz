@@ -8,7 +8,7 @@ $:.unshift(libdir) unless $:.include?(libdir)
 
 require 'yaml'
 
-require 'rubuzz/feed'
+require 'rubuzz/buzz_feed'
 
 module Rubuzz
 
