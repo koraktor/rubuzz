@@ -5,6 +5,7 @@
 
 require 'rubuzz/abstract_feed'
 require 'rubuzz/buzz'
+require 'rubuzz/pubsubhubbub'
 
 module Rubuzz
 
@@ -33,6 +34,18 @@ module Rubuzz
       end
 
       true
+    end
+
+    # Subscribe to this Buzz feed. This will automatically update this feed
+    # once new buzzes are posted
+    #
+    # +public_ip+:   The IP address the client should bind to
+    # +public_port+: The port the client should listen to
+    def subscribe(public_ip, public_port = 80)
+      fetch if @hub_url.nil?
+      hub = PubSubHubbub.new(@hub_url, public_ip, public_port)
+      hub.subscribe(self)
+      hub.client_thread.join
     end
 
   end
