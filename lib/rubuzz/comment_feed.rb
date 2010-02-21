@@ -21,9 +21,9 @@ module Rubuzz
       @url     = "http://buzz.googleapis.com/feeds/#{user}/comments/#{buzz_id}"
     end
 
-    # Fetches the data from the update feed
-    def fetch
-      feed_data = super
+    # Parses the data from the update feed
+    def parse(feed_data)
+      super
 
       @comments = []
       feed_data.elements.each('entry') do |comment_data|

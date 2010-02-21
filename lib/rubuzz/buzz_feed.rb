@@ -23,9 +23,9 @@ module Rubuzz
       @url = "http://buzz.googleapis.com/feeds/#{user}/public/posted"
     end
 
-    # Fetches the data from the update feed
-    def fetch
-      feed_data = super
+    # Parses the data from the update feed
+    def parse(feed_data)
+      super
 
       @buzzes = []
       feed_data.elements.each('entry') do |buzz_data|

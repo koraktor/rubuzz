@@ -21,14 +21,19 @@ module Rubuzz
       @user = user
     end
 
-    # Fetches general feed data for both, BuzzFeed and CommentFeed
+    # Fetches the data of a feed
     def fetch
       feed_data = REXML::Document.new(open(@url, :proxy => true)).root
+      parse(feed_data)
+    end
 
+    # Parses general feed data for both, BuzzFeed and CommentFeed
+    def parse(feed_data)
       @hub_url    = REXML::XPath.first(feed_data, 'link[@rel="hub"]').attributes['href']
       @id         = feed_data.elements['id'].text
       @title      = feed_data.elements['title'].text
       @updated_at = Time.parse(feed_data.elements['updated'].text)
+      @url        = REXML::XPath.first(feed_data, 'link[@rel="self"]').attributes['href']
 
       feed_data
     end
