@@ -8,11 +8,11 @@ $:.unshift(libdir) unless $:.include?(libdir)
 
 require 'yaml'
 
-require 'rubuzz/buzz_feed'
-
 module Rubuzz
 
   version = YAML.load_file(File.join(File.dirname(__FILE__), '..', 'VERSION.yml'))
   VERSION = "#{version[:major]}.#{version[:minor]}.#{version[:patch]}"
 
 end
+
+require 'rubuzz/buzz_feed'
